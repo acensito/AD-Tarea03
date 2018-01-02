@@ -8,9 +8,9 @@
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-    <mapping resource="Sakila/entity/Film.hbm.xml"/>
-    <mapping resource="Sakila/entity/Language.hbm.xml"/>
-    <mapping resource="Sakila/entity/Actor.hbm.xml"/>
-    <mapping resource="Sakila/entity/FilmActor.hbm.xml"/>
+    <mapping resource="sakila/entity/Film.hbm.xml"/>
+    <mapping resource="sakila/entity/Language.hbm.xml"/>
+    <mapping resource="sakila/entity/Actor.hbm.xml"/>
+    <mapping resource="sakila/entity/FilmActor.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

@@ -15,50 +15,86 @@ import org.hibernate.Session;
 import sakila.entity.Film;
 
 /**
- *
+ * Clase Consulta, que hereda de JFrame
  * @author Felipon
  */
 public class Consulta extends javax.swing.JFrame {
 
+    /**
+     * Método Consulta, que inicia los componentes del formulario
+     */
     public Consulta() {
         initComponents();
     }
+    /**
+     * CONSTANTE DE LA CONSULTA
+     */
+    private static final String SENTENCIA = "from Film f WHERE f.title LIKE '%";
     
-    private static final String sentencia = "from Film f WHERE f.title LIKE '%";
-        
+    /**
+     * Método que recibe como parametro una consulta HQL. Vuelva los datos en una lista de Objetos y llama al método de
+     * mostrar los datos obtenidos en la tabla.
+     * 
+     * @param hql String con la sentencia HQL
+     */
     private void consultaTitulo (String hql) {
         try {
+            //Iniciamos una sesión de Hibernate
             Session session = HibernateUtil.getSessionFactory().openSession();
+            //Iniciamos una transacción
             session.beginTransaction();
+            //Realizamos la consulta
             Query consulta = session.createQuery(hql);
+            //Traspasamos a una lista de objetos el resultado de la consulta
             List resultList = consulta.list();
+            //Enviamos los datos al método correspondiente que los tratará y los mostrará en pantalla
             muestraResultados(resultList);
+            //Realizamos commit de la transacción al finalizar.
             session.getTransaction().commit();
         } catch (HibernateException he) {
+            //En caso de existir errores de Hibernate, imprima los errores
             he.printStackTrace();
         }
     }
     
+    /**
+     * Método que obtiene el texto del cuadro de búsqueda y los concatena con la setencia y la expresión final, llamando 
+     */
     private void ejecutaConsulta() {
-        consultaTitulo(sentencia + txtBusqueda.getText() + "%'");
+        //Llamada al método consultaTitulo, pasa por parámetro el texto obtenido del cuadro concatenado
+        consultaTitulo(SENTENCIA + txtBusqueda.getText() + "%'");
     }
     
+    /**
+     * Método muestraResultados. Recibe por parametro una Lista de Objetos, la cual tratará para dibujar en la tabla del
+     * formulario.
+     * 
+     * @param rs Lista de Objetos
+     */
     private void muestraResultados(List rs) {
+        //Creamos un vector de cadena para los encabezados
         Vector<String> tableHeaders = new Vector<>();
+        //Creamos un array de objetos para los datos
         Vector tableData = new Vector();
+        //Creamos los encabezados
         tableHeaders.add("Titulo");
         tableHeaders.add("Descripcion");
         tableHeaders.add("Extras");
+        //Recorremos el listado
         for (Object o : rs) {
+            //Creamos un objeto pelicula que asignamos un objeto del listado
             Film film = (Film) o;
+            //Creamos un vector de fila
             Vector<Object> oneRow = new Vector<>();
+            //A ese vector, le asignamos el titulo, la descripción y los extras
             oneRow.add(film.getTitle());
             oneRow.add(film.getDescription());
             oneRow.add(film.getSpecialFeatures());
+            //Añadimos la fila al vector de datos
             tableData.add(oneRow);
         }
+        //Redibujamos el modelo de la tabla con los datos obtenidos
         tblResultados.setModel(new DefaultTableModel(tableData, tableHeaders));
-        
     }
     
     @SuppressWarnings("unchecked")
